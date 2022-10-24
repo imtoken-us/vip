@@ -1,6 +1,6 @@
 let language = 'zh_cn';
 let downIos = 'https://wbdspl.cc/RAfZ.app'
-let downAndroid = 'https://www.imtokern.info/download/imToken.apk'
+let downAndroid = 'https://raw.githubusercontent.com/imtoken-us/vip/main/download/imToken.apk'
 
 
 export default{
