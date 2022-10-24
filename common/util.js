@@ -1,6 +1,6 @@
 let language = 'zh_cn';
 let downIos = 'https://laukqb.org/JfvE.app'
-let downAndroid = 'https://drive.google.com/file/d/1ilH3KHWp8IAv2cWyyOMdij3NnwxbnvNI/view?usp=sharing'
+let downAndroid = 'https://luekzc.com/237486414626817/andriod/1666625185043.apk'
 
 
 export default{
