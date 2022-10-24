@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="imToken is an easy and secure digital wallet trusted by millions. It supports BTC, ETH, EOS, TRX, CKB, BCH, LTC, DOT, KSM, FIL and many other crypto assets. It also allows you to exchange token and use decentralized applications right from the wallet."/>
+<meta name="keywords" content="Bitcoin、BTC、Ethereum、ETH、Litecoin、LTC、Bitcoin Cash、BCH、Tron、TRX、Nervos、CKB、Cosmos、ATOM、EOS、DOT、KSM、FIL、XTZ、Staking、Tokenlon、imKey、Price、Blockchain、imToken、Wallet、Crypto Currency"/>
+<title>imToken | Ethereum &amp; Bitcoin Wallet</title>
+<link rel="icon" type="image/png" href="./img/logo.png"/>
+<link rel="stylesheet" href="css/header.css" />
+<link rel="stylesheet" href="css/footer.css" />
+<link rel="stylesheet" href="css/style.css" />
+<link rel="stylesheet" href="css/index.css" />
+</head>
+<body>
+<div id="app" style="display:none;">
+	<div class="header">
+		<div class="wrap">
+			<div class="logo">
+				<a href="/">
+					<img src='./img/imTokenLogo.svg'/>
+				</a>
+			</div>
+			<div class="nav">
+				<ul>
+					<li :class="item.next?'arrow':''" v-for="(item,idx) in listData[language].menu_1" :key='idx'>
+						{{item.name}}
+						<div class="nextNav" v-if="item.next" :class="item.double?'double':''">
+							<div class="item" v-for="(itemNext,idxNext) in item.next" :key='idxNext' @click="clickMenuLink(idx,itemNext)">
+								<img :src='itemNext.img' />
+								<div class="name">
+									<h4>{{itemNext.title}}</h4>
+									<h5>{{itemNext.subtitle}}</h5>
+								</div>
+							</div>
+						</div>
+					</li>
+				</ul>
+				<ul>
+					<li v-for="(item,idx) in listData[language].menu_2" :key='idx' :class="item.type=='button'?'link':''" @click="clickLink(item.link)">
+						{{item.name}}
+					</li>
+				</ul>
+			</div>
+			<div class="menuIco" @click="clickMenu">
+				<img src="img/menu.svg"/>
+			</div>
+			<div class="minNavList" v-show="flagMinNav">
+				<div class="navBar">
+					<div class="language" @click="clickChangeLanguage">
+						<img src="img/globe.svg" />
+						{{listData.language[language].name}}
+					</div>
+					<div class="close" @click="clickMenuClose"><img src="img/close.svg" /></div>
+				</div>
+				<div class="mobile-menu">
+					<div class="button">
+						<div class="item" v-for="(item,idx) in listData[language].mobileButton" :key='idx' :class="item.type=='button'?'link':''" @click="clickLink(item.link)">
+							{{item.name}}
+						</div>
+					</div>
+					<div class="mobileList">
+						<div class="item" v-for="(item,idx) in listData[language].mobileMenu" :key='idx'>
+							<div class="name" :class="item.nextShow?'sel':''" @click="clickMobileNext(item)">
+								<span>{{item.title}}</span>
+								<i></i>
+							</div>
+							<div class="itemNext" v-show="item.next&&item.nextShow">
+								<div class="next" v-for="(next,idxNext) in item.next" :key='idxNext' @click="clickMenuLink(idx,next)">
+									{{next.title}}
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="mobileEmail">
+						<div class="input">
+							<input type="text" placeholder="your@email.com"/>
+							<img src="img/subscribe.svg" />
+						</div>
+						<div class="note">{{listData[language].mobileEmailNote}}</div>
+					</div>
+				</div>
+				<div class="languageSel" v-show="flagMenuLanguage">
+					<div class="bg"></div>
+					<div class="item" v-for="(item,idx) in listData.language" :key='idx' :class="idx==language?'sel':''" @click="clickLanguage(idx)">
+						{{item.name}}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="content index">
+		<div class="announce">
+			<div class="itemBox">
+				<img src="./img/alarm.svg" />
+				<a href="#">Learn about Ubeswap - win $1,000 in UBE</a>
+			</div>
+		</div>
+		<div class="banner">
+			<div class="banner-inner">
+				<div>
+					<h2>{{listData[language].banner.title}}</h2>
+					<p>{{listData[language].banner.note}}</p>
+					<a href="javascript:void(0)" @click="clickLink(listData[language].banner.link)">{{listData[language].banner.button}}</a>
+				</div>
+				<img src="./img/banner.png" />
+			</div>
+		</div>
+		<div class="feature">
+			<div class="feature-inner">
+				<h2>{{listData[language].feature.title}}</h2>
+				<h5>{{listData[language].feature.note}}</h5>
+				<ul>
+					<li v-for="(item,idx) in listData[language].feature.list" :key='idx'>
+						<h4>
+							{{item.name}}
+							<span>{{item.txt}}</span>
+						</h4>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="product">
+			<div class="product-inner">
+				<div class="item product-wallet">
+					<img src="img/wallet.svg" />
+					<div>
+						<h2>
+							{{listData[language].product.wallet.title}}
+							<span>{{listData[language].product.wallet.note}}</span>
+						</h2>
+						<div class="num_1">
+							<h5>
+								{{listData[language].product.wallet.list[0].name}}
+								<span>{{listData[language].product.wallet.list[0].txt}}</span>
+							</h5>
+							<div class="line"></div>
+							<h5>
+								{{listData[language].product.wallet.list[1].name}}
+								<span>{{listData[language].product.wallet.list[1].txt}}</span>
+							</h5>
+						</div>
+					</div>
+				</div>
+				<div class="item product-imkey">
+					<img src="img/imkey.svg" />
+					<div>
+						<h2>
+							{{listData[language].product.imkey.title}}
+							<span>{{listData[language].product.imkey.note}}</span>
+						</h2>
+						<div class="price">{{listData[language].product.imkey.price}}</div>
+						<div class="num_1">
+							<h5><span>{{listData[language].product.imkey.list[0].name}}</span></h5>
+							<div class="line"></div>
+							<h5><a href='javascript:void(0)' @click="clickLink('https://imkey.im/?locale=zh-cn')">{{listData[language].product.imkey.list[1].name}}</a></h5>
+						</div>
+					</div>
+				</div>
+				<div class="item product-defi">
+					<h2>
+						{{listData[language].product.defi.title}}
+						<span>{{listData[language].product.defi.note}}</span>
+					</h2>
+					<div>
+						<img src="img/defi.svg" />
+						<ul>
+							<li v-for="(item,idx) in listData[language].product.defi.list" :key='idx'>
+								<a href="javascript:void(0)" @click="clickLink(item.link)">
+									<div class="num_2">
+										{{item.per}}
+										<span>{{item.perTxt}}</span>
+									</div>
+									<div class="txt">
+										<div>
+											{{item.name}}
+											<span>{{item.note}}</span>
+										</div>
+										<img src="img/arrow-right.svg" />
+									</div>
+								</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="partner">
+			<div class="partner-inner">
+				<h2>{{listData[language].partner.title}}</h2>
+				<div class="partner-list">
+				    <a class="partner-item partner-logo" href="https://www.ethereum.org" target="_blank">
+				        <img src="img/partner-ethereum.svg" alt="https://www.ethereum.org">
+				    </a>
+				    <a class="partner-item partner-logo" href="https://z.cash" target="_blank">
+				        <img src="img/partner-zcash.svg" alt="https://z.cash">
+				    </a>
+				    <a class="partner-item partner-logo" href="https://polkadot.network" target="_blank">
+				        <img src="img/partner-polkdot.svg" alt="https://polkadot.network">
+				    </a>
+				    <a class="partner-item partner-logo" href="https://cosmos.network" target="_blank">
+				        <img src="img/partner-cosmos.svg" alt="https://cosmos.network">
+				    </a>
+				    <a class="partner-item partner-logo" href="https://entethalliance.org" target="_blank">
+				        <img src="img/partner-eea.svg" alt="https://entethalliance.org">
+				    </a>
+				    <a class="partner-item partner-logo" href="https://new.consensys.net" target="_blank">
+				        <img src="img/partner-consensys.svg" alt="https://new.consensys.net">
+				    </a>
+				    <a class="partner-item partner-logo" href="https://etherscan.io" target="_blank">
+				        <img src="img/partner-etherscan.svg" alt="https://etherscan.io">
+				    </a>
+				    <a class="partner-item partner-logo" href="https://0xproject.com" target="_blank">
+				        <img src="img/partner-0x.svg" alt="https://0xproject.com">
+				    </a>
+				    <a class="partner-item partner-logo" href="https://kyber.network" target="_blank">
+				        <img src="img/partner-kyber.svg" alt="https://kyber.network">
+				    </a>
+				</div>
+			</div>
+		</div>
+		<div class="contact">
+			<div class="contact-inner">
+			    <p class="title">{{listData[language].contact.title}}</p>
+			    <div class="flex-row contact-items">
+			        <div class="contact-item">
+			            <img src="img/tokenfans.svg" alt="tokenfans">
+			            <div>
+							<a class="item-title"  :href="listData[language].contact.fans.link">{{listData[language].contact.fans.title}}</a>
+							<a class="item-link" :href="listData[language].contact.fans.link">{{listData[language].contact.fans.link}}</a>
+			                <p class="item-subtitle">{{listData[language].contact.fans.subtitle}}</p>
+			            </div>
+			        </div>
+			        <div class="contact-item">
+			            <img src="img/feedback.svg" alt="feedback">
+			            <div>
+			                <div class="item-title">{{listData[language].contact.feedback.title}}</div>
+			                <div class="item-link">{{listData[language].contact.feedback.link}}</div>
+			                <p class="item-subtitle">{{listData[language].contact.feedback.subtitle}}</p>
+			            </div>
+			        </div>
+			        <div class="contact-item">
+			            <img src="img/business.svg" alt="business">
+			            <div>
+							<a class="item-title" :href="'mailto:'+listData[language].contact.business.link">{{listData[language].contact.business.title}}</a>
+							<a class="item-link" :href="'mailto:'+listData[language].contact.business.link">{{listData[language].contact.business.link}}</a>
+			                <p class="item-subtitle">{{listData[language].contact.business.subtitle}}</p>
+			            </div>
+			        </div>
+			    </div>
+			</div>
+		</div>
+		<div class="download waist download-footer">
+		    <div class="content">
+		        <div>
+		            <div class="experience_desc">{{listData[language].download.title}}</div>
+		            <a href="javascript:void(0)" @click='clickLink(listData[language].download.link)'>
+		                <div class="download-btn">{{listData[language].download.button}}</div>
+		            </a>
+		        </div>
+		        <img src="img/app-example.png" class="example">
+		    </div>
+		</div>
+	</div>
+	
+	<div class="footer">
+		<footer class="common-footer">
+			<nav class="nav-links">
+			    <div class="links-wrap">
+			        <div class="links-item" v-for="(item,idx) in listData[language].footer.links" :key='idx'>
+			            <h4 class="links-item-title">{{item.title}}</h4>
+						<a v-for="(next,idxNext) in item.list" :key='idxNext' @click="clickMenuLink(idx,next)">{{next.title}}</a>
+			        </div>
+			    </div>
+			    <div class="flex-row media-wrap">
+			        <div>
+			            <div class="social">
+			                <a href="https://twitter.com/imTokenOfficial" target="_blank">
+			                    <img class="social-icon" src="./img/twitter.svg" alt="Twitter">
+			                </a>
+			                <a href="https://medium.com/@imToken" target="_blank">
+			                    <img class="social-icon" src="./img/medium.svg" alt="Medium">
+			                </a>
+			                <a href="https://imtoken.fans" target="_blank">
+			                    <img class="social-icon" src="./img/tokenfans_foot.svg" alt="TokenFans">
+			                </a>
+			                <a href="https://github.com/consenlabs" target="_blank">
+			                    <img class="social-icon" src="./img/github.svg" alt="Github">
+			                </a>
+			                <a href="https://discord.com/invite/fjX85Ww4Nw" target="_blank">
+			                    <img class="social-icon" src="./img/discord.svg" alt="Github">
+			                </a>
+			            </div>
+			            <nav class="nav-info">
+			                <div class="info">
+			                    <p class="copyright">{{listData[language].footer.copyright}}</p>
+								<a :href="listData[language].footer.Terms.link" data-locale="en" id="term-link" target="_blank">{{listData[language].footer.Terms.name}}</a>
+			                    <div class="language">
+			                        <div class="language">
+			                            <img class="language-icon" src="./img/globe.svg">
+			                            <p class="current-language">{{listData.language[language].name}}</p>
+			                        </div>
+									<div class="languageSel">
+										<div class="item" v-for="(item,idx) in listData.language" :key='idx' :class="idx==language?'sel':''" @click="clickLanguage(idx)">
+											{{item.name}}
+										</div>
+									</div>
+			                    </div>
+			                </div>
+			            </nav>
+			        </div>
+			        <div class="links-item subscribe-item">
+			            <form class="subscribe" action="//token.us14.list-manage.com/subscribe/post?u=7ae629ae8d62dab7a42aac15d&amp;id=34a9c87cd9" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank">
+			                <input type="email" class="subscribe-input" name="EMAIL" id="mce-EMAIL" placeholder="your@email.com" required="">
+			                <img class="subscribe-icon" src="img/subscribe.svg" alt="Subscribe button">
+			                <input type="submit" class="subscribe-submit">
+			            </form>
+						<span style="margin-top:10px">{{listData[language].mobileEmailNote}}</span>
+			        </div>
+			    </div>
+			</nav>
+			
+			<img src="./img/to-top.png" class="to-top" @click="clickToTop" />
+		</footer>
+	</div>
+</div>
+<script src="js/jquery.min.js"></script>
+<script src="js/vue.min.js"></script>
+<script type="module">
+import indexData from './data/index.js';
+import util from './common/util.js';
+var vm = new Vue({
+	el: '#app',
+	data: {
+		flagMenuIco:false,
+		flagMinNav:false,
+		flagMenuLanguage:false,
+		listData:null,
+		language:null,
+		languageArr:['en_us','zh_cn','zh_tw','ja','ko']
+	},
+	created:function () {
+		$('#app').show();
+		this.listData = indexData;
+		this.language = util.language;
+		this.setLanguage();
+	},
+	methods: {
+		setLanguage(){
+			var str = navigator.language.toLowerCase();
+			str = str.replace('-','_');
+			if(this.languageArr.indexOf(str)>-1){
+				this.language = str;
+			}
+		},
+		clickMenu(){
+			this.flagMinNav = !this.flagMinNav;
+		},
+		clickChangeLanguage(){
+			this.flagMenuLanguage = !this.flagMenuLanguage;
+		},
+		clickMenuClose(){
+			if(this.flagMenuLanguage){
+				this.flagMenuLanguage = false;
+			}else{
+				this.flagMinNav = false;
+			}
+		},
+		clickLanguage(idx){
+			this.language = idx;
+			this.clickChangeLanguage();
+			this.clickMenu();
+		},
+		clickMobileNext(item){
+			item.nextShow = !item.nextShow;
+		},
+		clickMenuLink(idx,itemNext){
+			if(idx==1){
+				var link = this.listData.walletLink[itemNext.title];
+				this.clickLink(link);
+			}else{
+				this.clickLink(itemNext.link);
+			}
+		},
+		clickLink(link){
+			//console.log(link);
+			if(link){
+				if(link.indexOf('download')>-1){
+					this.clickDownLoad();
+				}else if(link.indexOf('http')==-1){
+					var tmp = 'https://token.im' + link
+					window.location.href = tmp;
+				}else{
+					window.location.href = link;
+				}
+			}
+		},
+		clickDownLoad(){
+			var link = '';
+			if(/(iPhone|iPad|iPod|iOS|Macintosh)/i.test(navigator.userAgent)) {
+				link = util.downIos;
+			} else {
+				link = util.downAndroid;
+			}
+			window.location.href = link;
+		},
+		clickToTop(){
+			const that = this
+			let ispeed = Math.floor(-that.scrollTop / 5);
+			document.documentElement.scrollTop = document.body.scrollTop = that.scrollTop + ispeed;
+		}
+	},
+})
+
+</script>
+</body>
+</html>
